@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>书籍信息</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pages/show/show.css') }} "/>
+  </head>
+  <body>
+    <div class="page">
+      <div class="button-group">
+        <a href="/"><button class="submit-btn float-down" style="width:150px;height:50px;animation-delay:0s;">回到首页</button></a>
+        <a href="/inout"><button class="submit-btn float-down" style="width:150px;height:50px;animation-delay:0.05s;">去入库/出库</button></a>
+        <a href="/find"><button class="submit-btn float-down" style="width:150px;height:50px;animation-delay:0.1s;">去查找</button></a>
+        <a href="/db"><button class="submit-btn float-down" style="width:150px;height:50px;animation-delay:0.15s;">去操作数据库</button></a>
+      </div>
+      <style>
+      @keyframes floatDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .float-down {
+        animation: floatDown 0.5s cubic-bezier(.23,1.01,.32,1) both;
+      }
+      </style>
+
+        <h1 class="title">书籍信息</h1>
+
+        <div class="table-container">
+          <table class="book-table" id="bookTable">
+            <thead>
+              <tr>
+                <th>ISBN</th>
+                <th style="width:250px;">书名</th>
+                <th>简称</th>
+                <th>分类</th>
+                <th>最后操作</th>
+                <th style="width: 100px;">在库中</th>
+                <th style="width: 190px;">本学期有效</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for book in books %}
+              <tr class="float-up" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
+                <td>
+                  {% if book.isbn|length > 14 %}
+                    <div style="overflow: hidden; white-space: nowrap;">
+                      <marquee scrollamount="10" >{{ book.isbn }}</marquee>
+                    </div>
+                  {% else %}
+                    {{ book.isbn }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if book.bname|length > 7 %}
+                    <div style="overflow: hidden; white-space: nowrap;">
+                      <marquee scrollamount="10" >{{ book.bname }}</marquee>
+                    </div>
+                  {% else %}
+                    {{ book.bname }}
+                  {% endif %}
+                </td>
+                <td style="width: 130px;">
+                  {% if book.sname|length > 4 %}
+                  <div style="width: 130px; overflow: hidden; white-space: nowrap;">
+                    <marquee scrollamount="10">{{ book.sname }}</marquee>
+                  </div>
+                  {% else %}
+                  {{ book.sname }}
+                  {% endif %}
+                </td>
+                <td>
+                  <img src="{{ url_for('static', filename='zones/' ~ book.sort ~ '.JPG') }}" alt="柜子示意图: {{ book.sort }}" width="300" height="168.75" />
+                </td>
+                <td>{{ book.lastOper }}</td>
+                <td style="background-color: {{ 'mediumturquoise' if book.inside else '#ffb3b3' }};">
+                  {{ '是' if book.inside else '否' }}
+                </td>
+                <td style="background-color: {{ 'mediumturquoise' if book.validterm else '#ffb3b3' }};">
+                  {{ '是' if book.validterm else '否' }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <style>
+        @keyframes floatUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .float-up {
+          animation: floatUp 0.5s cubic-bezier(.23,1.01,.32,1) both;
+        }
+        </style>
+        
+      </div>
+    </div>
+  </body>
+</html>

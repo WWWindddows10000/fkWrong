@@ -1,0 +1,40 @@
+bbg:
+  hy01202405020152:
+    args:
+    - index: -3
+      length: -1
+      name: 编号
+    - index: -1
+      length: 1
+      name: 页
+    filename: 作业{编号}（第{页}页）.jpg
+    name: 化学必修一
+  name: 步步高练习册
+zh:
+  cg:
+    args:
+    - index: 6
+      length: 1
+      name: 学期
+    - index: 7
+      length: 2
+      name: 期
+    - index: 9
+      length: 99
+      name: 页
+    filename: 第{期}期（第{页}页）.jpg
+    name: 常规
+    subtypes:
+      1: 随笔或文段
+      2: 成语积累
+      3: 摘记
+  name: 语文
+学期:
+  1: 九年级上学期
+  2: 九年级下学期
+  3: 十年级上学期
+  4: 十年级下学期
+  5: 十一年级上学期
+  6: 十一年级下学期
+  7: 十二年级上学期
+  8: 十二年级下学期

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>扫描文件</title>
+  <style>
+    li.error {
+      background-color: #5a5a5a;
+      border-color: #1fe291;
+      color: #e9f0f6;
+      font-weight: bold;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+    }
+    li {
+      cursor: pointer;
+      display: block;
+      margin: auto;
+      width: 80%;
+      padding: 8px 16px;
+      border: 1px double #2600ff;
+      transition: background-color 0.4s;
+    }
+    #select_upload {
+      table-layout: fixed;
+      border: none;
+    }
+    #upload{
+      width: auto;
+      height: 100px;
+      border: 2px dashed #868686;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 100px;
+      color: #000000;
+      background-color: aquamarine;
+      font-size: 16px;
+      margin: auto;
+    }
+    li:hover {
+      background-color: #f5f5f5;
+    }
+    .two_column {
+      border: none;
+    }
+    li.error:hover {
+      background-color: #4b4b4b;
+    }
+    body {
+      font-family: "宋体";
+      background-image: url("../static/picture/background.jpg"); 
+      background-size: cover; 
+    }
+    #main_table {
+      background-color: rgba(127,255,212,0.75);
+      height: 60vh;
+    }
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style><!-- 如果使用外部css的话，不起作用，我也不知道为啥，neither ai knows~ -->
+</head>
+
+<body>
+<div class="container">
+  <table id="main_table" width="1096" border="3">
+    <tr>
+      <th height="162" colspan="2" scope="col"><img src="{{ url_for('static', filename='picture/fkWrong.png') }}" width="1088" height="158" /></th>
+    </tr>
+    <tr>
+      <th width="168" scope="row"><a href="/">回到首页></a></th>
+      <td width="1024" rowspan="6">
+        <table id="select_upload" width="700" height="auto" border="3" align="center">
+          <tr>
+            <th class="two_column" scope="col"><form action="" method="POST">
+              <div>
+                你可以……
+                <p></p>
+                <input style="width: 100%" name="submit" type="submit" value="扫描文件">
+                <p></p>
+                或者
+                <p></p>
+                <div id="upload">拖动文件到这里上传</div>
+              </div>
+            </form></th>
+            <th class="two_column" scope="col">
+              <div align="center">
+        也可以从以下最近5条邮件中选择……
+        <p></p>
+          <ul>
+            {% for emailContent in emails %}
+              {% if emailContent|length >= 30 %}
+                <li onClick="handleEmail('{{ loop.index0 }}')"><marquee scrollamount="8">{{ emailContent }}</marquee></li>
+              {% else %}
+                <li onClick="handleEmail('{{ loop.index0 }}')">{{ emailContent }}</li>
+              {% endif %}
+            {% endfor %}
+            {% if not emails %}
+              <li class="error">我们这边出了点问题……（没有找到邮件）</li>
+            {% endif %}
+          </ul>
+      </td>
+
+      </div>
+              </th>
+          </tr>
+        </table>
+        
+    </tr>
+    <tr>
+      <th scope="row">错题本></th>
+    </tr>
+    <tr>
+      <th scope="row">寻找作业&gt;</th>
+    </tr>
+    <tr>
+      <th scope="row">考试信息&gt;</th>
+    </tr>
+    <tr>
+      <th height="277" scope="row">&nbsp;</th>
+    </tr>
+  </table>
+</div>
+<script>
+  const dropZone = document.getElementById('upload'); // 定义在顶部，所有函数可访问
+
+  function handleEmail(index) {
+    // 在这里向flask后端以DELETE方式返回email编号
+    fetch('/', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ emailIndex: index })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      }
+      dropZone.style.backgroundColor = 'aquamarine'; // 上传成功后恢复背景色
+    })
+    .catch(error => {
+      console.error('上传失败:', error);
+      alert('邮件失败: ' + error);
+    });
+  }
+
+  dropZone.addEventListener('dragover', event => {
+    event.stopPropagation();
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+    dropZone.style.backgroundColor = '#ef49ad'; // 改变背景色以示拖动
+  });
+
+  dropZone.addEventListener('dragleave', event => {
+    dropZone.style.backgroundColor = 'aquamarine'; // 改变背景色以示拖动
+  });
+
+  dropZone.addEventListener('drop', event => {
+    // Get the files
+    const files = event.dataTransfer.files;
+    //在这里向flask后端以put方式上传文件
+    if (files.length > 0) {
+      const formData = new FormData();
+      formData.append('file', files[0]);
+      fetch('/', {
+        method: 'PUT',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.redirect) {
+          window.location.href = data.redirect;
+        }
+        dropZone.style.backgroundColor = 'aquamarine'; // 上传成功后恢复背景色
+      })
+      .catch(error => {
+        console.error('上传失败:', error);
+        alert('文件上传失败: ' + error);
+        dropZone.style.backgroundColor = 'aquamarine';
+      });
+    }
+    event.stopPropagation();
+    event.preventDefault();
+  });
+</script>
