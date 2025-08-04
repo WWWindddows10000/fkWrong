@@ -10,7 +10,6 @@ fkWrong! SettingsReco version 0.1.0
 """
 import os
 import yaml
-import os
 from logMeth import log, l
 
 
@@ -134,3 +133,51 @@ try:
 except Exception as e:
     log("由于未经处理的异常，无法成功调用resolveCode方法解析FID样例。\n异常信息：{}".format(str(e)),l.F)
     exit(1)
+
+
+def resolveAsTree():
+    config = load_config()
+    tree = []
+
+    for main_id, main_val in config.items():
+        if main_id == "学期":
+            continue
+
+        main_name = main_val.get("name", main_id)
+        main_node = {
+            "id": main_id,
+            "name": main_name,
+            "father": "（根节点）",
+            "children": []
+        }
+
+        for sub_id, sub_val in main_val.items():
+            if sub_id == "name":
+                continue
+            if not isinstance(sub_val, dict):
+                continue
+
+            sub_node = {
+                "id": f"{main_id}_{sub_id}",
+                "name": sub_val.get("name", sub_id),
+                "father": main_id,
+            }
+            if "args" in sub_val:
+                sub_node["args"] = sub_val["args"]
+
+            # 子类
+            if "subtypes" in sub_val:
+                sub_node["children"] = []
+                for subtype_code, subtype_name in sub_val["subtypes"].items():
+                    sub_node["children"].append({
+                        "id": f"{main_id}_{sub_id}_{subtype_code}",
+                        "name": subtype_name,
+                        "father": f"{main_id}_{sub_id}"
+                    })
+
+            main_node["children"].append(sub_node)
+
+        tree.append(main_node)
+
+    log("成功解析为配置树，共 {} 个主类。".format(len(tree)), l.I)
+    return tree

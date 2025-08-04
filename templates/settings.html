@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>扫描文件</title>
+  <style>
+    body {
+      font-family: "宋体";
+    }
+    #main_table {
+      table-layout: fixed;
+      height: 400px;
+    }
+    .container {
+      position: absolute;
+      height:400px;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    input[type="text"],
+    input[type="number"] {
+      background-color: #f1c64e;}
+
+    input.paramIndex,
+    input.paramName{
+      width: 100px;
+    }
+    input.paramLength {
+      width:50px;
+    }
+    .func {
+        width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #tree {
+      width: 100%;
+      text-align: left;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+    }
+
+    #details {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+  li:hover {
+      color: #007BFF;
+    }
+  ul {
+    list-style-type: none;
+    padding-left: 20px;
+    border-left: 1px dashed #ccc;
+    margin: 0;
+  }
+
+  ul ul {
+    border-left: 1px dashed #ccc;
+    margin-left: 12px;
+    padding-left: 12px;
+  }
+
+  li {
+    position: relative;
+    margin: 6px 0;
+  }
+
+  li::before {
+    content: "├─";
+    position: absolute;
+    left: -16px;
+    color: #999;
+  }
+
+  li:last-child::before {
+    content: "└─";
+  }
+  .func input[type="submit"] {
+      width: 100%;
+      height: 100%;
+    }
+
+  .node {
+    padding: 3px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .node:hover {
+    background-color: #e0f0ff;
+    color: #007acc;
+    font-weight: bold;
+  }
+
+  </style><!-- 如果使用外部css的话，不起作用，我也不知道为啥，neither ai knows~ -->
+</head>
+
+<body>
+    <div class="container">
+      <table width="800" height="220" id="main_table" border="3">
+        <colgroup>
+          <col style="width: 50px;">
+          <col style="width: 50px;">
+          <col style="width: 50px;">
+          <col style="width: 150px;">
+        </colgroup>
+        <tr>
+          <th height="36" colspan="3" scope="col">节点信息</th>
+          <th width="248" scope="col">节点列表</th>
+        </tr>
+        <tr>
+          <th height="100" width="200" colspan="3" scope="col">
+            <div id="details">
+            <div align="left" id="node-info">
+              <p>点击左侧节点查看详细信息</p>
+            </div>
+          </div>
+          </th>
+          <th width="800" rowspan="3" scope="col"><div id="tree">
+            <div id="tree-container"></div>
+          </div></th>
+        </tr>
+        <form action="/setting" method="post">
+        <tr>
+          <th height="281" colspan="3" scope="col"><fieldset>
+  <legend>节点操作</legend>
+            <br>
+  <label for="target_node_id">*节点 ID</label>
+  <input type="text" name="target_node_id" id="target_node_id" >
+  <br><p></p>
+  <label for="target_node_name">*节点名称</label>
+  <input type="text" name="target_node_name" id="target_node_name" >
+  <p></p>
+  <label for="target_node_name">文件名</label>
+  <input type="text" name="target_node_filename" id="target_node_filename" >
+  <p></p>
+  <input type="checkbox" id="end" name="end">
+  
+  <label for="end">末端子节点</label>
+  <p></p>
+    <legend>子节点参数</legend>
+    <table id="params_table">
+      <tr>
+        <th>参数名</th>
+        <th>起始位置</th>
+        <th>长度</th>
+        <th>操作</th>
+      </tr>
+    </table>
+    <button type="button" onclick="addParamRow()">添加参数</button>
+  </fieldset></th>
+        </tr>
+        <tr>
+          <th class="func" width="125" height="47" scope="row"><strong><input type="submit" value="新建根节点"></input></strong></th>
+          <td class="func" width="125"><strong><input type="submit" value="新建子节点"></input></strong></td>
+          <td class="func" width="125"><strong><input type="submit" value="删除节点"></input></strong></td>
+        </tr>
+        </form>
+          
+
+  
+      </table>
+    </div>
+    <script>
+      const treeData = {{ tree_data | safe }};  // Jinja2 传入的树数据为列表
+      const treeContainer = document.getElementById('tree-container');
+      const infoContainer = document.getElementById('node-info');
+      console.log(treeData);
+      function createTreeNode(node) {
+        const li = document.createElement('li');
+        const isFolder = node.children && node.children.length > 0;
+
+        const span = document.createElement('span');
+        span.className = 'node';
+        span.dataset.id = node.id;
+        span.innerHTML = `${isFolder ? '📂' : '📄'} ${node.name}`;
+        li.appendChild(span);
+
+        if (isFolder) {
+          const ul = document.createElement('ul');
+          ul.style.display = 'block'; // 默认展开
+          node.children.forEach(child => {
+            ul.appendChild(createTreeNode(child));
+          });
+          li.appendChild(ul);
+
+          // 添加点击展开/收起功能
+          span.addEventListener('click', (e) => {
+            e.stopPropagation(); // 防止事件冒泡
+            if (ul.style.display === 'none') {
+              ul.style.display = 'block';
+              span.innerHTML = `📂 ${node.name}`; // 展开图标
+            } else {
+              ul.style.display = 'none';
+              span.innerHTML = `📁 ${node.name}`; // 收起图标
+            }
+            // 发请求获取详细信息
+            fetchNodeDetail(node.id);
+          });
+        } else {
+          // 叶节点点击事件
+          span.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fetchNodeDetail(node.id);
+          });
+        }
+
+        return li;
+      }
+
+      function generateArgsTable(args) {
+        let table = `<p><strong>参数：</strong></p>
+          <table border="1" cellspacing="0" cellpadding="4" style="border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th>参数名</th>
+                <th>起始索引</th>
+                <th>长度</th>
+              </tr>
+            </thead>
+            <tbody>`;
+        args.forEach(arg => {
+          table += `
+            <tr>
+              <td>${arg.name}</td>
+              <td>${arg.index}</td>
+              <td>${arg.length}</td>
+            </tr>`;
+        });
+        table += `</tbody></table>`;
+        return table;
+      }
+      function buildTree(data) {
+        const ul = document.createElement('ul');
+        data.forEach(node => {
+          ul.appendChild(createTreeNode(node));
+        });
+        treeContainer.appendChild(ul);
+      }
+
+      async function fetchNodeDetail(nodeId) {
+        try {
+          const res = await fetch("/node_info", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({id: nodeId})
+          });
+
+          const node = await res.json();
+
+          infoContainer.innerHTML = `
+            <p><strong>节点编号：</strong>${node.id}</p>
+            <p><strong>节点名称：</strong>${node.name}</p>
+            ${node.args ? generateArgsTable(node.args) : ""}
+          `;
+        } catch (error) {
+          console.error("获取节点信息失败：", error);
+          infoContainer.innerHTML = `<p style="color:red;">获取信息失败：${error.message}</p>`;
+
+                }
+      }
+
+      // 事件委托：点击 .node 元素时触发
+      document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("node")) {
+          const nodeId = e.target.dataset.id;
+          fetchNodeDetail(nodeId);
+        }
+      });
+
+      buildTree(treeData);
+    </script>
+    <script>
+    function setAction(type) {
+      document.getElementById("action_type").value = type;
+    }
+
+    function addParamRow() {
+      const table = document.getElementById("params_table");
+      const row = table.insertRow();
+      row.innerHTML = `
+        <td><input type="text" class="paramName" name="param_name[]" placeholder="参数名"></td>
+        <td><input type="number" class="paramIndex" name="param_index[]" placeholder="起始位置"></td>
+        <td><input type="number" class="paramLength" name="param_length[]" placeholder="长度"></td>
+        <td><button type="button" onclick="this.parentElement.parentElement.remove()">删除</button></td>
+      `;
+    }
+  </script>
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>扫描文件</title>
+  <title>fkWrong!主页</title>
   <style>
     li.error {
       background-color: #5a5a5a;
@@ -57,8 +57,21 @@
     }
     #main_table {
       background-color: rgba(127,255,212,0.75);
-      height: 1300;
+      height: auto;
     }
+    #main_table th[scope="row"] {
+      min-width: 168px;
+      max-width: 168px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    th[scope="row"] {
+        height: 20px;
+        max-height: 20px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
     .container {
       position: absolute;
       top: 50%;
@@ -121,12 +134,13 @@
 </script>
 <div class="container">
   <table id="main_table" width="1096" border="3">
+
     <tr>
-      <th height="138" colspan="2" scope="col"><img src="{{ url_for('static', filename='picture/fkWrong.png') }}" width="1088" height="138" /></th>
+      <th height="138" colspan="2" scope="col"><img src="{{ url_for('static', filename='picture/fkWrong.png') }}" style="width:100%;height:158px;" /></th>
     </tr>
     <tr>
       <th width="168" scope="row">===快速开始===</th>
-      <td width="1024" rowspan="6">
+      <td width="1024" align="center" id="main_ui" rowspan="8">
         {{ main_ui | safe }}
     </tr>
     <tr>
@@ -141,7 +155,11 @@
     <tr>
       <th scope="row" id="scanButton">文件扫描&gt;</th>
     <tr>
-      <th height="277" scope="row">&nbsp;</th>
+      <th scope="row" id="printButton">打印&gt;</th>
+    <tr>
+      <th scope="row" id="settingsButton">设置&gt;</th>
+    <tr>
+      <th style="height: 277px !important;" scope="row">&nbsp;</th>
     </tr>
   </table>
 </div>
@@ -170,4 +188,16 @@ document.getElementById('scanButton').onclick = function() {
 document.getElementById('closeScanWin').onclick = function() {
   document.getElementById('scanWin').style.display = 'none';
 };
+document.getElementById('settingsButton').onclick = function() {
+  document.getElementById('main_ui').innerHTML = `<iframe
+    id="settingsWindow"
+    title="设置"
+    width="804"
+    height="500"
+    src="/setting">
+  </iframe>`;
+};
 </script>
+
+</body>
+</html>

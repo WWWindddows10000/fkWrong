@@ -42,7 +42,7 @@
       margin: auto;
     }
     li:hover {
-      background-color: #f5f5f5;
+      background-color: #31968d;
     }
     .two_column {
       border: none;
@@ -59,6 +59,27 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+    }
+    .marquee-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+      width: 100%;
+      position: relative;
+    }
+
+    .marquee {
+      display: inline-block;
+      padding-left: 100%; /* 起始位置从右侧开始 */
+      animation: marquee 10s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
     }
   </style><!-- 如果使用外部css的话，不起作用，我也不知道为啥，neither ai knows~ -->
 </head>
@@ -86,7 +107,7 @@
           <ul>
             {% for emailContent in emails %}
               {% if emailContent|length >= 30 %}
-                <li onClick="handleEmail('{{ loop.index0 }}')"><marquee scrollamount="8">{{ emailContent }}</marquee></li>
+                <li onClick="handleEmail('{{ loop.index0 }}')"><div class="marquee-wrap"><div class="marquee">{{ emailContent }}</div></div></li>
               {% else %}
                 <li onClick="handleEmail('{{ loop.index0 }}')">{{ emailContent }}</li>
               {% endif %}
