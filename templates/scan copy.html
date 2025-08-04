@@ -52,12 +52,7 @@
     }
     body {
       font-family: "宋体";
-      background-image: url("../static/picture/background.jpg"); 
-      background-size: cover; 
-    }
-    #main_table {
-      background-color: rgba(127,255,212,0.75);
-      height: 60vh;
+      color:#e9f0f6
     }
     .container {
       position: absolute;
@@ -70,14 +65,8 @@
 
 <body>
 <div class="container">
-  <table id="main_table" width="1096" border="3">
-    <tr>
-      <th height="162" colspan="2" scope="col"><img src="{{ url_for('static', filename='picture/fkWrong.png') }}" width="1088" height="158" /></th>
-    </tr>
-    <tr>
-      <th width="168" scope="row"><a href="/">回到首页></a></th>
-      <td width="1024" rowspan="6">
-        <table id="select_upload" width="700" height="auto" border="3" align="center">
+
+        <table id="select_upload" width="700" height="200" border="3" align="center">
           <tr>
             <th class="two_column" scope="col"><form action="" method="POST">
               <div>
@@ -112,21 +101,7 @@
               </th>
           </tr>
         </table>
-        
-    </tr>
-    <tr>
-      <th scope="row">错题本></th>
-    </tr>
-    <tr>
-      <th scope="row">寻找作业&gt;</th>
-    </tr>
-    <tr>
-      <th scope="row">考试信息&gt;</th>
-    </tr>
-    <tr>
-      <th height="277" scope="row">&nbsp;</th>
-    </tr>
-  </table>
+
 </div>
 <script>
   const dropZone = document.getElementById('upload'); // 定义在顶部，所有函数可访问
@@ -191,4 +166,5 @@
     event.stopPropagation();
     event.preventDefault();
   });
+
 </script>

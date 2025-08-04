@@ -5,6 +5,10 @@ app = Flask(__name__)
 def index():
     return render_template('scan.html', emails=["test_email_content_one_a_b_c","test_email_content_two_a_b_c", "test_email_content_three_a_b_c", "test_email_content_four_a_b_c", "test_email_content_five_a_b_c"])
 
+@app.route('/scanWindow', methods=['GET'])
+def scan_window():
+    return render_template('scan copy.html', emails=["scanwindow","test_email_content_two_a_b_c", "test_email_content_three_a_b_c", "test_email_content_four_a_b_c", "test_email_content_five_a_b_c"])
+
 @app.route('/', methods=['POST'])
 def post():
     return render_template('scan.html', emails=["post got!"])
