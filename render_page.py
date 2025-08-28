@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from readSettings import resolveAsTree
 from flask import request, jsonify
-
+import mail
 
 app = Flask(__name__)
 # @app.route('/', methods=['GET'])
@@ -10,7 +10,13 @@ app = Flask(__name__)
 
 @app.route('/scanWindow', methods=['GET'])
 def scan_window():
-    return render_template('scan copy.html', emails=["scanwindow","test_email_content_two_a_b_c", "test_email_content_three_a_b_c_test_for_marquee_brackets", "test_email_content_four_a_b_c", "test_email_content_five_a_b_c"])
+    return render_template('scan copy.html', emails=mail.get_recent_mails(7))
+
+
+@app.route('/print', methods=['GET'])
+def printPage():
+    return render_template('print.html')
+
 
 # @app.route('/', methods=['POST'])
 # def post():

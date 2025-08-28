@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>扫描文件</title>
+  <style>
+    body {
+      font-family: "宋体";
+      color:#e9f0f6
+    }
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    input[type="text"],
+    input[type="number"] {
+      background-color: #f1c64e;}
+  </style><!-- 如果使用外部css的话，不起作用，我也不知道为啥，neither ai knows~ -->
+</head>
+
+<body>
+<div class="container">
+
+       <form method="post" action="/print">
+        <input type="text" id="code" name="code" placeholder="输入编号" required>
+        <select id="type" name="type" required>
+          <option value="qrcode">二维码</option>
+          <option value="barcode">条码</option>
+          <option value="cal">日历</option>
+        </select>
+        <input type="submit" value="打印">
+       </form>
+
+      </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeSelect = document.getElementById('type');
+            const codeInput = document.getElementById('code');
+            
+            // 初始化时检查一次
+            updateCodeField();
+            
+            // 监听选择变化
+            typeSelect.addEventListener('change', updateCodeField);
+            
+            function updateCodeField() {
+                if (typeSelect.value === 'cal') {
+                    codeInput.removeAttribute('required');
+                    codeInput.placeholder = "日历打印不需要编号...";
+                } else {
+                    codeInput.setAttribute('required', 'required');
+                    codeInput.placeholder = "请输入您的编号...";
+                }
+            }
+            
+            // 表单提交验证
+            document.getElementById('printForm').addEventListener('submit', function(e) {
+                if (typeSelect.value !== 'cal' && !codeInput.value.trim()) {
+                    e.preventDefault();
+                    alert('请填写编号！');
+                    codeInput.focus();
+                }
+            });
+        });
+      </script>
+</body></html>

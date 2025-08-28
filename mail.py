@@ -8,11 +8,12 @@
 ╚═╝     ╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝                                                       
 fkWrong! MailModule version 0.1.0                                        
 """
-import imaplib
-import email
 import os
-from email.header import decode_header
 from datetime import datetime
+from imapclient import IMAPClient
+from email.header import decode_header
+import email
+
 
 # 文件路径
 CREDENTIALS_PATH = "./secret/code.txt"
@@ -25,56 +26,68 @@ def get_credentials():
         email_address = lines[0].strip()
         password = lines[1].strip()
         return email_address, password
-
-# 建立 IMAP 连接
+# 建立 IMAPClient 连接
 def connect_imap():
     email_address, password = get_credentials()
-    imap = imaplib.IMAP4_SSL("imap.126.com")  # 改成你邮箱对应的 IMAP 服务器
-    imap.login(email_address, password)
-    return imap
+    server = IMAPClient("imap.126.com", ssl=True)
+    server.login(email_address, password)
+    return server
 
-# 获取最近邮件的标题
+
 def get_recent_mails(limit=7):
-    imap = connect_imap()
-    imap.select("INBOX")
-    result, data = imap.search(None, "ALL")
-    mail_ids = data[0].split()
-    recent_ids = mail_ids[-limit:]
+    email_address, password = get_credentials()
+    dates = []
 
-    mails = []
-    for i in reversed(recent_ids):
-        res, msg_data = imap.fetch(i, "(RFC822)")
-        try:
-            msg = email.message_from_bytes(msg_data[0][1])
-            subject_raw = msg["Subject"]
-            if subject_raw is not None:
-                subject, _ = decode_header(subject_raw)[0]
-                if isinstance(subject, bytes):
-                    subject = subject.decode()
-            else:
-                subject = ""
-            mails.append(subject)
-        except (IndexError, TypeError, email.errors.MessageError):
-            mails.append("(解析邮件出错)")
-    imap.logout()
-    return mails
+    try:
+        with IMAPClient("imap.126.com", ssl=True, timeout=10) as server:
+            server.id_({"name": "fkWrongFetcher", "version": "1.0"})
+            server.login(email_address, password)
+            server.select_folder("INBOX", readonly=True)
 
+            messages = server.search(["ALL"])
+            if not messages:
+                return ["(没有找到邮件)"]
+
+            recent_ids = messages[-limit:]
+            fetch_data = server.fetch(recent_ids, ["ENVELOPE"])
+
+            for msgid in reversed(recent_ids):
+                try:
+                    envelope = fetch_data[msgid][b"ENVELOPE"]
+                    date_obj = envelope.date
+
+                    # 安全格式化日期
+                    if date_obj and isinstance(date_obj, datetime):
+                        dates.append(date_obj.strftime("%Y-%m-%d(%a) %H:%M:%S"))
+                    else:
+                        dates.append("(无时间信息)")
+                except Exception as e:
+                    dates.append(f"(解析失败: {e})")
+
+    except Exception as e:
+        dates.append(f"(连接失败: {e})")
+
+    return dates
+
+
+# 下载指定邮件编号中的 PDF 附件
 def fetch_pdf_attachment_by_index(index=1):
-    imap = connect_imap()
-    imap.select("INBOX")
-    result, data = imap.search(None, "ALL")
-    mail_ids = data[0].split()
-    if not mail_ids or index < 1 or index > len(mail_ids):
-        imap.logout()
+    server = connect_imap()
+    server.id_({"name": "IMAPClient", "version": "2.1.0"})
+    server.select_folder("INBOX", readonly=False)
+    messages = server.search("ALL")
+
+    if not messages or index < 1 or index > len(messages):
+        server.logout()
         return None
 
-    # 最新的为1，往前递增
-    target_id = mail_ids[-index]
-    res, msg_data = imap.fetch(target_id, "(RFC822)")
-    msg = email.message_from_bytes(msg_data[0][1])
+    target_id = messages[-index]
+    msg_data = server.fetch(target_id, ["RFC822"])
+    raw_msg = msg_data[target_id][b"RFC822"]
+    msg = email.message_from_bytes(raw_msg)
 
     for part in msg.walk():
-        if part.get_content_maintype() == 'multipart':
+        if part.get_content_maintype() == "multipart":
             continue
         if part.get("Content-Disposition") is None:
             continue
@@ -82,13 +95,13 @@ def fetch_pdf_attachment_by_index(index=1):
         if filename:
             filename, _ = decode_header(filename)[0]
             if isinstance(filename, bytes):
-                filename = filename.decode()
+                filename = filename.decode(errors="ignore")
             if filename.lower().endswith(".pdf"):
                 os.makedirs(TEMP_DIR, exist_ok=True)
                 filepath = os.path.join(TEMP_DIR, filename)
                 with open(filepath, "wb") as f:
                     f.write(part.get_payload(decode=True))
-                imap.logout()
+                server.logout()
                 return filename
-    imap.logout()
+    server.logout()
     return None

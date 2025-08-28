@@ -78,6 +78,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
     }
+
   </style><!-- 如果使用外部css的话，不起作用，我也不知道为啥，neither ai knows~ -->
 </head>
 
@@ -93,7 +94,7 @@
 
 
 <body>
-<div class="drag-container" onselectstart="return false;" id="scanWin" style="display:none; position:fixed; top:500px; left:500px; z-index:9999; cursor:move;background-color: #0066ffa4;">
+<div class="drag-container" onselectstart="return false;" id="scanWin" style="display:none; position:fixed; top:500px; left:500px; z-index:4444; cursor:move;background-color: #0066ffa4;">
   <div style="text-align: center; font-size: 24px;height: 30px; color: #ffffff;background-color: #8f36f4;">
     <strong>文件扫描</strong>
     <button align="right" id="closeScanWin" style="float: right; background-color: #f44336; color: white; border: none;height:30px;width:40px; cursor: pointer;">X</button>
@@ -102,36 +103,70 @@
     id="scanWindow"
     title="文件扫描"
     width="700"
-    height="223"
+    height="353"
     src="/scanWindow"
+    style="pointer-events:auto; user-select:none;">
+  </iframe>
+</div><div class="drag-container" onselectstart="return false;" id="prtWin" style="display:none; position:fixed; top:500px; left:500px; z-index:9999; cursor:move;background-color: #0066ffa4;">
+  <div width="200" style="text-align: center; font-size: 24px;height: 30px; color: #ffffff;background-color: #8f36f4;">
+    <strong>打印</strong>
+    <button align="right" id="closePrtWin" style="float: right; background-color: #f44336; color: white; border: none;height:30px;width:40px; cursor: pointer;">X</button>
+  </div>
+  <iframe
+    id="printWindow"
+    title="打印"
+    width="200"
+    height="50"
+    src="/print"
     style="pointer-events:auto; user-select:none;">
   </iframe>
 </div>
 <script>
-  // 简单拖动功能
-  const dragElem = document.getElementById('scanWin');
-  let isDragging = false, offsetX = 0, offsetY = 0;
+  // 获取两个可拖动窗口
+  const scanWin = document.getElementById('scanWin');
+  const prtWin = document.getElementById('prtWin');
 
-  dragElem.addEventListener('mousedown', function(e) {
-    isDragging = true;
-    offsetX = e.clientX - dragElem.offsetLeft;
-    offsetY = e.clientY - dragElem.offsetTop;
-    dragElem.style.cursor = 'grabbing';
-  });
+  // 当前拖动状态
+  let isDragging = false;
+  let dragTarget = null;
+  let offsetX = 0;
+  let offsetY = 0;
 
+  // 公共mousedown绑定
+  function setupDragEvents(elem) {
+    elem.addEventListener('mousedown', function(e) {
+      // 只允许拖动顶部标题区域
+      if (e.target.tagName.toLowerCase() === 'button') return; // 忽略点击关闭按钮
+      isDragging = true;
+      dragTarget = elem;
+      offsetX = e.clientX - elem.offsetLeft;
+      offsetY = e.clientY - elem.offsetTop;
+      elem.style.cursor = 'grabbing';
+    });
+  }
+
+  // 应用到两个元素
+  setupDragEvents(scanWin);
+  setupDragEvents(prtWin);
+
+  // 鼠标移动时拖动窗口
   document.addEventListener('mousemove', function(e) {
-    if (isDragging) {
-      dragElem.style.left = (e.clientX - offsetX) + 'px';
-      dragElem.style.top = (e.clientY - offsetY) + 'px';
+    if (isDragging && dragTarget) {
+      dragTarget.style.left = (e.clientX - offsetX) + 'px';
+      dragTarget.style.top = (e.clientY - offsetY) + 'px';
     }
   });
 
+  // 鼠标释放时取消拖动
   document.addEventListener('mouseup', function() {
+    if (isDragging && dragTarget) {
+      dragTarget.style.cursor = 'move';
+    }
     isDragging = false;
-    dragElem.style.cursor = 'move';
+    dragTarget = null;
   });
-
 </script>
+
 <div class="container">
   <table id="main_table" width="1096" border="3">
 
@@ -140,11 +175,12 @@
     </tr>
     <tr>
       <th width="168" scope="row">===快速开始===</th>
-      <td width="1024" align="center" id="main_ui" rowspan="8">
-        {{ main_ui | safe }}
+      <td id="toolBar"><strong>这里是工具栏，选择一项功能以开始……</strong></td>
     </tr>
     <tr>
       <th scope="row">错题本&gt;</th>
+      <td width="1024" align="center" id="main_ui" rowspan="7">
+        {{ main_ui | safe }}
     </tr>
     <tr>
       <th scope="row">寻找作业&gt;</th>
@@ -155,7 +191,7 @@
     <tr>
       <th scope="row" id="scanButton">文件扫描&gt;</th>
     <tr>
-      <th scope="row" id="printButton">打印&gt;</th>
+      <th scope="row" id="prtBut">打印&gt;</th>
     <tr>
       <th scope="row" id="settingsButton">设置&gt;</th>
     <tr>
@@ -188,6 +224,12 @@ document.getElementById('scanButton').onclick = function() {
 document.getElementById('closeScanWin').onclick = function() {
   document.getElementById('scanWin').style.display = 'none';
 };
+document.getElementById('prtBut').onclick = function() {
+  document.getElementById('prtWin').style.display = 'block';
+};
+document.getElementById('closePrtWin').onclick = function() {
+  document.getElementById('prtWin').style.display = 'none';
+};
 document.getElementById('settingsButton').onclick = function() {
   document.getElementById('main_ui').innerHTML = `<iframe
     id="settingsWindow"
@@ -196,6 +238,10 @@ document.getElementById('settingsButton').onclick = function() {
     height="500"
     src="/setting">
   </iframe>`;
+  document.getElementById('toolBar').innerHTML = `
+  <button id="node">节点设置</button>
+  <button id="api">AI API设置</button>
+  `;
 };
 </script>
 

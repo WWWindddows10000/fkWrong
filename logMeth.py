@@ -17,7 +17,8 @@ from datetime import datetime as dt
 file_handler = logging.FileHandler('logs/{}.log'.format(dt.now().strftime("%Y%m%H%M%S%f")), encoding='utf-8')
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-
+logging.getLogger("imapclient").setLevel(logging.WARNING)
+logging.getLogger("imaplib").setLevel(logging.WARNING)
 class l(enum.Enum):
     I = 'INFO'
     W = 'WARN'
