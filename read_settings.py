@@ -10,7 +10,7 @@ fkWrong! SettingsReco version 0.1.0
 """
 import os
 import json
-from logMeth import log, l
+from logging_methods import log, l
 
 BASE_PATH = r"E:\fkWrong作业文件"
 
@@ -29,11 +29,11 @@ def save_config(config, path="settings/storeConfigure.json"):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(config, f, ensure_ascii=False, indent=2)
 
-def resolveCode(code, returnPath=True):
+def resolve_code(code, return_path=True):
     """
     解析文件FID,返回路径
     :param code: FID
-    :param returnPath: 是否返回路径，否则返回文件名
+    :param return_path: 是否返回路径，否则返回文件名
     :return: 路径
     """
     config = load_config()
@@ -71,10 +71,7 @@ def resolveCode(code, returnPath=True):
                         args["学期"] = config["学期"].get(term_code, f"未知学期({term_code})")
 
                     # 拼接路径
-                    path_parts = [BASE_PATH]
-                    path_parts.append(category["name"])
-                    path_parts.append(subtype["name"])
-                    subtype_name = None
+                    path_parts = [BASE_PATH, category["name"], subtype["name"]]
                     if "subtypes" in subtype:
                         sub_code = rest[len(subtype_key):len(subtype_key)+2]
                         subtype_name = subtype["subtypes"].get(sub_code, f"未知子类({sub_code})")
@@ -83,15 +80,29 @@ def resolveCode(code, returnPath=True):
                         path_parts.append(args["学期"])
                     filename = filename_template.format(**args)
                     path_parts.append(filename)
-
-                    if not returnPath:
+                    if not return_path:
+                        log("Query filename for {}: {}".format(code, os.path.join(*path_parts).replace('\\', '-').replace('E:-fkWrong作业文件-', '')[:-4]), l.D)
                         return os.path.join(*path_parts).replace('\\', '-').replace('E:-fkWrong作业文件-', '')[:-4]
+                    log("Query filename for {}: {}".format(code, os.path.join(*path_parts)), l.D)
                     return os.path.join(*path_parts)
     return 0
 
-def addToConf(parent, code, name, filename=None, args=None, subtypes=None):
+def match_subject(code):
     """
-    添加新的配置项到配置文件中
+    Resolve the subject ID
+    :param code: FID
+    :return: subject ID
+    Necessary note: 0-5 for Chi-Mat-Eng-Phy-Che-Bio, 8 for Other, and 9 for unknown.
+    """
+    config = load_config()
+    for prefix in config:
+        pass
+
+
+
+def add_to_configure_file(parent, code, name, filename=None, args=None, subtypes=None):
+    """
+    Add a new node to the configure file
     """
     config = load_config()
 
@@ -112,10 +123,9 @@ def addToConf(parent, code, name, filename=None, args=None, subtypes=None):
 
     save_config(config)
 
-def resolveAsTree():
+def resolve_as_tree():
     config = load_config()
     tree = []
-
     for main_id, main_val in config.items():
         if main_id == "学期":
             continue
@@ -155,5 +165,9 @@ def resolveAsTree():
             main_node["children"].append(sub_node)
 
         tree.append(main_node)
-
+    log("Loaded the configuration tree. Found {} root nodes.".format(len(tree)), l.D)
     return tree
+
+log("fkWrong! configuration parsing module has been successfully introduced.", l.I)
+log("Next, test resolve_code. The result of executing this function should be [数学-暑假作业（升十年级）-第03练（第1页）]", l.D)
+resolve_code("mat10ssj031",False)

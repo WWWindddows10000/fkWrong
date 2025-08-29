@@ -1,3 +1,6 @@
 secret/
 templates/弃用/
 logs/
+.venv/
+.idea/
+database/

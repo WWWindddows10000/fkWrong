@@ -14,11 +14,22 @@ import logging
 from rich.logging import RichHandler
 from datetime import datetime as dt
 
+logger = logging.getLogger("all_in_logger")
+logger.setLevel(logging.DEBUG)
+
 file_handler = logging.FileHandler('logs/{}.log'.format(dt.now().strftime("%Y%m%H%M%S%f")), encoding='utf-8')
-file_handler.setLevel(logging.INFO)
+file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+console_handler = RichHandler()
+console_handler.setLevel(logging.DEBUG)
+
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
+
 logging.getLogger("imapclient").setLevel(logging.WARNING)
 logging.getLogger("imaplib").setLevel(logging.WARNING)
+
 class l(enum.Enum):
     I = 'INFO'
     W = 'WARN'
@@ -26,14 +37,8 @@ class l(enum.Enum):
     F = 'FATAL'
     D = 'DEBUG'
 
-def log(message, type):
-    FORMAT = "%(message)s"
-    logging.basicConfig(
-        level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
-    )
-    logger = logging.getLogger("rich")
-    logger.addHandler(file_handler)
-    match type:
+def log(message, level):
+    match level:
         case l.I:
             logger.info(message)
         case l.W:

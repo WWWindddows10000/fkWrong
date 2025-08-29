@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from readSettings import resolveAsTree
+from read_settings import resolve_as_tree
 from flask import request, jsonify
 import mail
 
@@ -14,7 +14,7 @@ def scan_window():
 
 
 @app.route('/print', methods=['GET'])
-def printPage():
+def print_page():
     return render_template('print.html')
 
 
@@ -30,16 +30,15 @@ def printPage():
 # def delete():
 #     return render_template('scan.html', emails=["delete got!"])
 
-tree = resolveAsTree()
-print(tree)
+tree = resolve_as_tree()
 # 将平铺 id->node 映射
-def flatten_tree(tree):
+def flatten_tree(node_tree):
     flat = {}
     def _flatten(node):
         flat[node['id']] = node
         for child in node.get('children', []):
             _flatten(child)
-    for root in tree:
+    for root in node_tree:
         _flatten(root)
     return flat
 

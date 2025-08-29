@@ -13,8 +13,8 @@ import os
 import shutil
 from pyzbar.pyzbar import decode
 from PIL import Image
-from logMeth import log, l
-from readSettings import resolveCode
+from logging_methods import log, l
+from read_settings import resolveCode
 
 def loadPDF(pdfPath):
     """

@@ -1,4 +1,4 @@
-# Main Program
+# Database operator
 """
 ███████╗██╗  ██╗██╗    ██╗██████╗  ██████╗ ███╗   ██╗ ██████╗ 
 ██╔════╝██║ ██╔╝██║    ██║██╔══██╗██╔═══██╗████╗  ██║██╔════╝ 
@@ -6,20 +6,39 @@
 ██╔══╝  ██╔═██╗ ██║███╗██║██╔══██╗██║   ██║██║╚██╗██║██║   ██║
 ██║     ██║  ██╗╚███╔███╔╝██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝
 ╚═╝     ╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝                                                       
-fkWrong! version 0.1.0 "Ampere"                                           
+fkWrong! dbOperator version 0.1.0                                        
 """
+
+import pyodbc as db
 import time
-from rich.console import Console
-import os
-# from readSettings import resolveCode
-import readSettings
-from flask import Flask, render_template
-from logMeth import log, l
+from logging_methods import log, l
+from read_settings import resolve_code, match_subject
 
-app = Flask()
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('pages/index/index.html',rolling_message='欢迎您使用WinBookMan资料管理系统！版本号：{}。今天是：{}，祝您生活愉快！你在干什么‽'.format(version,datetime.now().strftime('%Y年%m月%d日')))
+DBPATH = r"database\db.accdb"
+conn_str = (
+    r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
+    r'DBQ=' + DBPATH + ';'
+)
+try:
+    conn = db.connect(conn_str)
+    cursor = conn.cursor()
+except Exception as e:
+    log(f"An error occurred when connecting the database : {e}", l.F)
+    log("The program will exit now.", l.F)
+    exit(1)
+log("Connected to the database.", l.I)
 
-if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=443)
+def exc(order):
+    cursor.execute(order)
+
+class File:
+    def __init__(self, fid):
+        self.fid = fid
+        self.title = resolve_code(fid, False)
+        self.subject = match_subject(fid)
+        self.register_time = time.time()
+
+
+SQL_SENTENCES = {
+    "write_file" : ""
+}
