@@ -38,6 +38,9 @@ class l(enum.Enum):
     D = 'DEBUG'
 
 def log(message, level):
+    """
+
+    """
     match level:
         case l.I:
             logger.info(message)

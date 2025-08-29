@@ -31,7 +31,6 @@ def print_page():
 #     return render_template('scan.html', emails=["delete got!"])
 
 tree = resolve_as_tree()
-# 将平铺 id->node 映射
 def flatten_tree(node_tree):
     flat = {}
     def _flatten(node):

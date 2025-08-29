@@ -14,6 +14,7 @@ import time
 from logging_methods import log, l
 from read_settings import resolve_code, match_subject
 
+# Database connection
 DBPATH = r"database\db.accdb"
 conn_str = (
     r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
@@ -28,8 +29,42 @@ except Exception as e:
     exit(1)
 log("Connected to the database.", l.I)
 
-def exc(order):
-    cursor.execute(order)
+
+def database_operations(operation, **kwargs):
+    """
+
+
+    """
+    match(operation):
+        case "i":
+            if not kwargs:
+                log("Failed to update database : No arguments provided.", l.W)
+                return
+            table = kwargs["table"]
+            columns = []
+            placeholders = []
+            values = []
+            for column, value in kwargs.items():
+                columns.append(f'"{column}"')
+                placeholders.append('%s')
+                values.append(value)
+            order = f'INSERT INTO "{table}" ({", ".join(columns)}) VALUES ({", ".join(placeholders)})'
+        case "c":
+            if not kwargs:
+                log("Failed to update database : No arguments provided.", l.W)
+                return
+            order = f'UPDATE "file" SET "corrected" = 1 WHERE "fid" = "{kwargs["fid"]}"'
+        case "r":
+            if not kwargs:
+                log("Failed to update database : No arguments provided.", l.W)
+                return
+    try:
+        cursor.execute(order)
+        db.commit()
+    except Exception as e:
+        log(f"An error occurred when updating to the database : {e}", l.E)
+        db.rollback()
+
 
 class File:
     def __init__(self, fid):
@@ -39,6 +74,3 @@ class File:
         self.register_time = time.time()
 
 
-SQL_SENTENCES = {
-    "write_file" : ""
-}

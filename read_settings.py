@@ -16,25 +16,25 @@ BASE_PATH = r"E:\fkWrong作业文件"
 
 def load_config(path="settings/storeConfigure.fksc"):
     """
-    加载JSON
-    :return: 存储JSON
+    load JSON
+    :return: JSON
     """
     with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def save_config(config, path="settings/storeConfigure.json"):
     """
-    保存JSON
+    save JSON
     """
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(config, f, ensure_ascii=False, indent=2)
 
 def resolve_code(code, return_path=True):
     """
-    解析文件FID,返回路径
+    resolve the FID
     :param code: FID
-    :param return_path: 是否返回路径，否则返回文件名
-    :return: 路径
+    :param return_path: return a path or a filename
+    :return: path or filename
     """
     config = load_config()
     for prefix in config:
@@ -100,15 +100,18 @@ def match_subject(code):
 
 
 
-def add_to_configure_file(parent, code, name, filename=None, args=None, subtypes=None):
+def add_to_configure_file(parent, code, name, subject=None, filename=None, args=None, subtypes=None):
     """
     Add a new node to the configure file
+    :params:
     """
     config = load_config()
 
     entry = {"name": name}
     if filename is not None:
         entry["filename"] = filename
+    if subject is not None:
+        entry["subject"] = subject
     if args is not None:
         entry["args"] = args
     if subtypes is not None:
@@ -124,6 +127,10 @@ def add_to_configure_file(parent, code, name, filename=None, args=None, subtypes
     save_config(config)
 
 def resolve_as_tree():
+    """
+    resolve the configure file as a tree
+    :return: tree list
+    """
     config = load_config()
     tree = []
     for main_id, main_val in config.items():

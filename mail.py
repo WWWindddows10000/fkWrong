@@ -13,6 +13,7 @@ from datetime import datetime
 from imapclient import IMAPClient
 from email.header import decode_header
 import email
+from logging_methods import log, l
 
 
 # 文件路径
