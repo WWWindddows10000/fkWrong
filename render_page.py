@@ -1,6 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from read_settings import resolve_as_tree
-from flask import request, jsonify
 import mail
 
 app = Flask(__name__)

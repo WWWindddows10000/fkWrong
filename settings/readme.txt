@@ -6,14 +6,14 @@ The general norm of fksc files is written below. Check it carefully before editi
 
 "root node FID": {
   "child node FID": {
-    "args": [
+    "args": [                 <- !Warning! you don't need to add a page param now.
       {
-        "index": number,      <- This indicates where the arg is located.
-        "length": number,     <- Length of the arg.
-        "name": "xxx"         <- The name must be consistent with the args in the filename.
+        "index": number,      <- This indicates where the param is located.
+        "length": number,     <- Length of the param.
+        "name": "xxx"         <- The name must be consistent with the params in the filename.
       }
     ],
-    "filename": "filename{xxx}.jpg",     <- If you need to mention an arg in the filename, add a {} outside the name.
+    "filename": "filename{xxx}",         <- If you need to mention an param in the filename, add a {} outside the name. You don't need to mention the page of the file.
     "name": "sub node name",             <- Subdirectory name.
     "subject": 8                         <- Subject ID, 0-5 for Chi-Mat-Eng-Phy-Che-Bio, 8 for Other, and 9 for unknown.
                                          In fact, 9 will never appear in this file. But the python function may return 9 when it is unable to determine.

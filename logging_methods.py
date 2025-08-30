@@ -9,10 +9,10 @@
 fkWrong! Logging Methods version 0.1.0                                        
 """
 
+from datetime import datetime as dt
 import enum
 import logging
 from rich.logging import RichHandler
-from datetime import datetime as dt
 
 logger = logging.getLogger("all_in_logger")
 logger.setLevel(logging.DEBUG)

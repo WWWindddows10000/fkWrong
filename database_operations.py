@@ -9,8 +9,10 @@
 fkWrong! dbOperator version 0.1.0                                        
 """
 
-import pyodbc as db
 import time
+import pyodbc as db
+from traits.trait_types import false
+
 from logging_methods import log, l
 from read_settings import resolve_code, match_subject
 
@@ -33,13 +35,15 @@ log("Connected to the database.", l.I)
 def database_operations(operation, **kwargs):
     """
     General database operations
-    :param operation: [i]nsert, [c]orrect, [r]emove, [s]earch
+    :param operation: [i]nsert, [c]orrect, [r]emove, [s]earch, [e]xist
     :param kwargs: table, key-value pairs, fid
     """
     if not kwargs:
         log("Failed to update database : No arguments provided.", l.W)
         return False
-    if operation == "i" or operation == "r" or operation == "s":
+    if operation == "e":
+        return True if database_operations('s',**kwargs) != [] else False
+    elif operation == "i" or operation == "r" or operation == "s":
         table = kwargs["table"]
         where_clauses = []   # For the remove operation
         values = []
@@ -88,9 +92,24 @@ def database_operations(operation, **kwargs):
     log(f"Database operation \n '{order}' \n is successfully executed with values \n {values}.", l.I)
     return True
 
+
 class File:
+    """
+    A single file
+    :param fid: The ID of the file + page
+    :ivar in_the_database: True if the file is in the database
+    """
+    in_the_database = False
     def __init__(self, fid):
         self.fid = fid
-        self.title = resolve_code(fid, False)
-        self.subject = match_subject(fid)
-        self.register_time = time.time()
+        in_the_database = database_operations('e', table='file', fid=fid)
+        if not in_the_database:
+            self.title = resolve_code(fid, False)
+            self.subject = match_subject(fid)
+            self.register_time = time.time()
+            self.corrected = False
+        else:
+            record = database_operations('s', table='file', fid=fid)[0][1:]
+            self.title, self.subject, self.register_time, self.corrected = record
+
+

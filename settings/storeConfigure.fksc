@@ -6,14 +6,9 @@
           "index": -3,
           "length": -1,
           "name": "编号"
-        },
-        {
-          "index": -1,
-          "length": 1,
-          "name": "页"
         }
       ],
-      "filename": "作业{编号}（第{页}页）.jpg",
+      "filename": "作业{编号}",
       "name": "化学必修一",
       "subject": 4
     },
@@ -31,14 +26,9 @@
           "index": 7,
           "length": 2,
           "name": "期"
-        },
-        {
-          "index": 9,
-          "length": 99,
-          "name": "页"
         }
       ],
-      "filename": "第{期}期（第{页}页）.jpg",
+      "filename": "第{期}期",
       "name": "常规",
       "subtypes": {
         "1": "随笔或文段",
@@ -51,18 +41,13 @@
   },
   "mat": {
     "10ssj": {
-      "filename": "第{练}练（第{页}页）.jpg",
+      "filename": "第{练}练",
       "name": "暑假作业（升十年级）",
       "args":[
         {
           "index":8,
           "length":2,
           "name":"练"
-        },
-        {
-          "index":10,
-          "length":99,
-          "name":"页"
         }
       ]
     },

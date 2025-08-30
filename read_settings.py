@@ -29,10 +29,11 @@ def save_config(config, path="settings/storeConfigure.json"):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(config, f, ensure_ascii=False, indent=2)
 
-def resolve_code(code, return_path=True):
+def resolve_code(code, page, return_path=True):
     """
     resolve the FID
-    :param code: FID
+    :param code: File ID
+    :param page: Page number
     :param return_path: return a path or a filename
     :return: path or filename
     """
@@ -80,25 +81,34 @@ def resolve_code(code, return_path=True):
                         path_parts.append(args["学期"])
                     filename = filename_template.format(**args)
                     path_parts.append(filename)
+                    filepath =  os.path.join(*path_parts)
                     if not return_path:
-                        log("Query filename for {}: {}".format(code, os.path.join(*path_parts).replace('\\', '-').replace('E:-fkWrong作业文件-', '')[:-4]), l.D)
-                        return os.path.join(*path_parts).replace('\\', '-').replace('E:-fkWrong作业文件-', '')[:-4]
-                    log("Query filename for {}: {}".format(code, os.path.join(*path_parts)), l.D)
-                    return os.path.join(*path_parts)
+                        log("Query title for {}: {}".format(code, filepath.replace('\\', '-').replace('E:-fkWrong作业文件-', '')), l.D)
+                        return filepath.replace('\\', '-').replace('E:-fkWrong作业文件-', '')
+                    filepath += f'(第{page}页).jpg'
+                    log("Query filename for {}: {}".format(code, filepath), l.D)
+                    return filepath
     return 0
 
 def match_subject(code):
     """
-    Resolve the subject ID
-    :param code: FID
-    :return: subject ID
-    Necessary note: 0-5 for Chi-Mat-Eng-Phy-Che-Bio, 8 for Other, and 9 for unknown.
+    Find subject code by FID
+    :param code: File ID
+    :return: 0-5,8-9
     """
     config = load_config()
-    for prefix in config:
-        pass
-
-
+    for prefix, data in config.items():
+        if prefix == "学期":
+            continue
+        if code.startswith(prefix):
+            rest = code[len(prefix):]
+            for sub_id, sub_data in data.items():
+                if not isinstance(sub_data, dict):
+                    continue
+                if rest.startswith(sub_id) and "subject" in sub_data:
+                    return sub_data["subject"]
+            return data.get("subject", 9)
+    return 9
 
 def add_to_configure_file(parent, code, name, subject=None, filename=None, args=None, subtypes=None):
     """
@@ -128,8 +138,7 @@ def add_to_configure_file(parent, code, name, subject=None, filename=None, args=
 
 def resolve_as_tree():
     """
-    resolve the configure file as a tree
-    :return: tree list
+    resolve the configure file as a tree    :return:  list
     """
     config = load_config()
     tree = []
@@ -175,6 +184,9 @@ def resolve_as_tree():
     log("Loaded the configuration tree. Found {} root nodes.".format(len(tree)), l.D)
     return tree
 
-log("fkWrong! configuration parsing module has been successfully introduced.", l.I)
-log("Next, test resolve_code. The result of executing this function should be [数学-暑假作业（升十年级）-第03练（第1页）]", l.D)
-resolve_code("mat10ssj031",False)
+def self_test():
+    log("fkWrong! configuration parsing module has been successfully introduced.", l.I)
+    log("Next, test resolve_code. The result of executing this function should be [数学-暑假作业（升十年级）-第03练（第1页）]", l.D)
+    resolve_code("mat10ssj031",False)
+
+self_test()
