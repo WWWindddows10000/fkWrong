@@ -5,29 +5,24 @@ import mail
 app = Flask(__name__)
 # @app.route('/', methods=['GET'])
 # def index():
-#     return render_template('scan.html')
+#     return render_template('main_page.html')
 
 @app.route('/scanWindow', methods=['GET'])
 def scan_window():
-    return render_template('scan copy.html', emails=mail.get_recent_mails(7))
-
-
-@app.route('/print', methods=['GET'])
-def print_page():
-    return render_template('print.html')
+    return render_template('upload_file.html', emails=mail.get_recent_mails(7))
 
 
 # @app.route('/', methods=['POST'])
 # def post():
-#     return render_template('scan.html', emails=["post got!"])
+#     return render_template('main_page.html', emails=["post got!"])
 
 # @app.route('/', methods=['PUT'])
 # def put():
-#     return render_template('scan.html', emails=["put got!"])
+#     return render_template('main_page.html', emails=["put got!"])
 
 # @app.route('/', methods=['DELETE'])
 # def delete():
-#     return render_template('scan.html', emails=["delete got!"])
+#     return render_template('main_page.html', emails=["delete got!"])
 
 tree = resolve_as_tree()
 def flatten_tree(node_tree):
@@ -48,7 +43,7 @@ def setting():
 
 @app.route("/")
 def index():
-    return render_template("scan.html")
+    return render_template("main_page.html")
 
 @app.route("/node_info", methods=["POST"])
 def node_info():

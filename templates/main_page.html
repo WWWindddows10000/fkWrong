@@ -109,17 +109,10 @@
   </iframe>
 </div><div class="drag-container" onselectstart="return false;" id="prtWin" style="display:none; position:fixed; top:500px; left:500px; z-index:9999; cursor:move;background-color: #0066ffa4;">
   <div width="200" style="text-align: center; font-size: 24px;height: 30px; color: #ffffff;background-color: #8f36f4;">
-    <strong>打印</strong>
+    <strong>浮动窗口2</strong>
     <button align="right" id="closePrtWin" style="float: right; background-color: #f44336; color: white; border: none;height:30px;width:40px; cursor: pointer;">X</button>
   </div>
-  <iframe
-    id="printWindow"
-    title="打印"
-    width="200"
-    height="50"
-    src="/print"
-    style="pointer-events:auto; user-select:none;">
-  </iframe>
+  浮动窗口2内容
 </div>
 <script>
   // 获取两个可拖动窗口
@@ -179,7 +172,7 @@
     </tr>
     <tr>
       <th scope="row">错题本&gt;</th>
-      <td width="1024" align="center" id="main_ui" rowspan="7">
+      <td width="1024" align="center" id="main_ui" rowspan="6">
         {{ main_ui | safe }}
     </tr>
     <tr>
@@ -190,8 +183,6 @@
     </tr>
     <tr>
       <th scope="row" id="scanButton">文件扫描&gt;</th>
-    <tr>
-      <th scope="row" id="prtBut">打印&gt;</th>
     <tr>
       <th scope="row" id="settingsButton">设置&gt;</th>
     <tr>
@@ -223,12 +214,6 @@ document.getElementById('scanButton').onclick = function() {
 };
 document.getElementById('closeScanWin').onclick = function() {
   document.getElementById('scanWin').style.display = 'none';
-};
-document.getElementById('prtBut').onclick = function() {
-  document.getElementById('prtWin').style.display = 'block';
-};
-document.getElementById('closePrtWin').onclick = function() {
-  document.getElementById('prtWin').style.display = 'none';
 };
 document.getElementById('settingsButton').onclick = function() {
   document.getElementById('main_ui').innerHTML = `<iframe
