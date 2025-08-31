@@ -10,6 +10,7 @@ fkWrong! SettingsReco version 0.1.0
 """
 import os
 import json
+import time
 from logging_methods import log, l
 
 BASE_PATH = r"E:\fkWrong作业文件"
@@ -29,12 +30,12 @@ def save_config(config, path="settings/storeConfigure.json"):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(config, f, ensure_ascii=False, indent=2)
 
-def resolve_code(code, page, return_path=True):
+def resolve_code(code, return_path=0, page=None):
     """
     resolve the FID
     :param code: File ID
+    :param return_path: 0 for whole path, 1 for file title, 2 for parent dir
     :param page: Page number
-    :param return_path: return a path or a filename
     :return: path or filename
     """
     config = load_config()
@@ -81,13 +82,21 @@ def resolve_code(code, page, return_path=True):
                         path_parts.append(args["学期"])
                     filename = filename_template.format(**args)
                     path_parts.append(filename)
-                    filepath =  os.path.join(*path_parts)
-                    if not return_path:
-                        log("Query title for {}: {}".format(code, filepath.replace('\\', '-').replace('E:-fkWrong作业文件-', '')), l.D)
-                        return filepath.replace('\\', '-').replace('E:-fkWrong作业文件-', '')
-                    filepath += f'(第{page}页).jpg'
-                    log("Query filename for {}: {}".format(code, filepath), l.D)
-                    return filepath
+                    file_path =  os.path.join(*path_parts)
+                    parent_path = os.path.join(*path_parts[:-1])
+                    if return_path == 0:
+                        if page is None:
+                            log(f"Query filename for {code} failed : No page param given.", l.E)
+                            return BASE_PATH + rf"\分类错误\{code}{time.time()}.jpg"
+                        file_path += f'(第{page}页).jpg'
+                        log("Query filename for {}: {}".format(code, file_path), l.D)
+                        return file_path
+                    elif return_path == 1:
+                        log(f"Query title for {code}: {file_path.replace('\\', '-').replace('E:-fkWrong作业文件-', '')}", l.D)
+                        return file_path.replace('\\', '-').replace('E:-fkWrong作业文件-', '')
+                    elif return_path == 2:
+                        log(f"Query parent dir for {code}: {parent_path}", l.D)
+                        return parent_path
     return 0
 
 def match_subject(code):
@@ -187,6 +196,7 @@ def resolve_as_tree():
 def self_test():
     log("fkWrong! configuration parsing module has been successfully introduced.", l.I)
     log("Next, test resolve_code. The result of executing this function should be [数学-暑假作业（升十年级）-第03练（第1页）]", l.D)
-    resolve_code("mat10ssj031",False)
+    resolve_code("mat10ssj031",1)
+    resolve_code("mat10ssj031", 1)
 
 self_test()

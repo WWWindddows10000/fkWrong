@@ -10,11 +10,11 @@ fkWrong! dbOperator version 0.1.0
 """
 
 import time
+import os
 import pyodbc as db
-from traits.trait_types import false
-
+import re
 from logging_methods import log, l
-from read_settings import resolve_code, match_subject
+from fid_interpretation import resolve_code, match_subject
 
 # Database connection
 DBPATH = r"database\db.accdb"
@@ -112,4 +112,16 @@ class File:
             record = database_operations('s', table='file', fid=fid)[0][1:]
             self.title, self.subject, self.register_time, self.corrected = record
 
-
+    def find_max_page(self):
+        """
+        Find the maximum page number
+        """
+        pattern = re.compile(rf"^{re.escape(self.fid)}（第(\d+)页）\.jpg$")
+        max_num = 0
+        for f in os.listdir(path):
+            match = pattern.match(f)
+            if match:
+                num = int(match.group(1))
+                if num > max_num:
+                    max_num = num
+        return max_num

@@ -14,7 +14,7 @@ import shutil
 from pyzbar.pyzbar import decode
 from PIL import Image
 from logging_methods import log, l
-from read_settings import resolveCode
+from fid_interpretation import resolveCode
 
 def loadPDF(pdfPath):
     """

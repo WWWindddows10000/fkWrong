@@ -18,11 +18,14 @@
     }
     li {
       cursor: pointer;
-      display: block;
-      margin: auto;
-      width: 80%;
-      padding: 8px 16px;
-      border: 1px double #2600ff;
+      display: inline-block;
+      width: 10%;
+      margin-right: 0;
+      text-align: center;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      background-color: #00ff73;
+      border: 1px #000000;
       transition: background-color 0.4s;
     }
     #select_upload {
@@ -224,8 +227,9 @@ document.getElementById('settingsButton').onclick = function() {
     src="/setting">
   </iframe>`;
   document.getElementById('toolBar').innerHTML = `
-  <button id="node">节点设置</button>
-  <button id="api">AI API设置</button>
+  <ui>
+  <li id="node">节点设置</li>
+  <li id="api">AI API设置</li></ui>
   `;
 };
 </script>
