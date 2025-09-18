@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from fid_interpretation import resolve_as_tree
-import mail
+# import mail
 
 app = Flask(__name__)
 # @app.route('/', methods=['GET'])
@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/scanWindow', methods=['GET'])
 def scan_window():
-    return render_template('upload_file.html', emails=mail.get_recent_mails(7))
+    return render_template('upload_file.html', emails=['mail1','mail2','mail3','mail4']) # mail.get_recent_mails(7)
 
 
 # @app.route('/', methods=['POST'])
@@ -40,6 +40,10 @@ flat_map = flatten_tree(tree)
 @app.route("/setting", methods=["GET"])
 def setting():
     return render_template("settings.html", tree_data=tree)
+
+@app.route("/api_setting", methods=["GET"])
+def api_setting():
+    return render_template("ai_api_set.html", tree_data=tree)
 
 @app.route("/")
 def index():

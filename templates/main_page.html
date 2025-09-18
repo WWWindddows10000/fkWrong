@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>fkWrong!主页</title>
+  <title>鸟语时报在线编辑</title>
   <style>
     li.error {
       background-color: #5a5a5a;
@@ -167,7 +167,7 @@
   <table id="main_table" width="1096" border="3">
 
     <tr>
-      <th height="138" colspan="2" scope="col"><img src="{{ url_for('static', filename='picture/fkWrong.png') }}" style="width:100%;height:158px;" /></th>
+      <th height="138" colspan="2" scope="col"><img src="../static/picture/fkWrong.png" style="width:100%;height:158px;" /></th>
     </tr>
     <tr>
       <th width="168" scope="row">===快速开始===</th>
@@ -228,10 +228,28 @@ document.getElementById('settingsButton').onclick = function() {
   </iframe>`;
   document.getElementById('toolBar').innerHTML = `
   <ui>
-  <li id="node">节点设置</li>
-  <li id="api">AI API设置</li></ui>
+  <li id="node" onClick="node()">节点设置</li>
+  <li id="api" onClick="api()">AI API设置</li></ui>
   `;
 };
+	function api(){
+		document.getElementById('main_ui').innerHTML = `<iframe
+    id="settingsWindow"
+    title="设置"
+    width="804"
+    height="500"
+    src="/api_setting">
+  </iframe>`;
+	}
+	function node(){
+		document.getElementById('main_ui').innerHTML = `<iframe
+    id="settingsWindow"
+    title="设置"
+    width="804"
+    height="500"
+    src="/setting">
+  </iframe>`;
+	}
 </script>
 
 </body>

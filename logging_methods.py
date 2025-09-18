@@ -16,8 +16,7 @@ from rich.logging import RichHandler
 
 logger = logging.getLogger("all_in_logger")
 logger.setLevel(logging.DEBUG)
-
-file_handler = logging.FileHandler('logs/{}.log'.format(dt.now().strftime("%Y%m%H%M%S%f")), encoding='utf-8')
+file_handler = logging.FileHandler('logs/{}.log'.format(dt.now().strftime("%Y%m%H%M")), encoding='utf-8')
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 
@@ -41,14 +40,13 @@ def log(message, level):
     """
 
     """
-    match level:
-        case l.I:
-            logger.info(message)
-        case l.W:
-            logger.warning(message)
-        case l.E:
-            logger.error(message)
-        case l.F:
-            logger.critical(message)
-        case l.D:
-            logger.debug(message)
+    if level == l.I:
+        logger.info(message)
+    elif level == l.W:
+        logger.warning(message)
+    elif level == l.E:
+        logger.error(message)
+    elif level == l.F:
+        logger.critical(message)
+    elif level == l.D:
+        logger.debug(message)

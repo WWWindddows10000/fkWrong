@@ -22,6 +22,8 @@ def load_config(path="settings/storeConfigure.fksc"):
     """
     with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
+    return None
+
 
 def save_config(config, path="settings/storeConfigure.json"):
     """
@@ -92,7 +94,8 @@ def resolve_code(code, return_path=0, page=None):
                         log("Query filename for {}: {}".format(code, file_path), l.D)
                         return file_path
                     elif return_path == 1:
-                        log(f"Query title for {code}: {file_path.replace('\\', '-').replace('E:-fkWrong作业文件-', '')}", l.D)
+                        backslash = r'\\'
+                        log(f"Query title for {code}: {file_path.replace(backslash, '-').replace('E:-fkWrong作业文件-', '')}", l.D)
                         return file_path.replace('\\', '-').replace('E:-fkWrong作业文件-', '')
                     elif return_path == 2:
                         log(f"Query parent dir for {code}: {parent_path}", l.D)
