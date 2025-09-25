@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>扫描文件</title>
+  <style>
+    body {
+        font-family: "宋体";
+		align-items: center;
+		display: flex;
+        background-color: rgba(0, 255, 217, 0.35);
+        justify-content: center;
+        align-items: center;
+    }
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    input[type="text"],
+    input[type="number"] {
+      background-color: #f1c64e;}
+
+    input.paramIndex,
+    input.paramName{
+      width: 100px;
+    }
+    input.paramLength {
+      width:50px;
+    }
+    .func {
+        width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #tree {
+      width: 100%;
+      text-align: left;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+    }
+
+    #details {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+  li:hover {
+      color: #007BFF;
+    }
+  ul {
+    list-style-type: none;
+    padding-left: 20px;
+    border-left: 1px dashed #ccc;
+    margin: 0;
+  }
+
+  ul ul {
+    border-left: 1px dashed #ccc;
+    margin-left: 12px;
+    padding-left: 12px;
+  }
+
+  li {
+    position: relative;
+    margin: 6px 0;
+  }
+
+  .func input[type="submit"] {
+      width: 100%;
+      height: 100%;
+    }
+
+  .node {
+    padding: 3px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .node:hover {
+    background-color: #e0f0ff;
+    color: #007acc;
+    font-weight: bold;
+  }
+
+  </style><!-- 如果使用外部css的话，不起作用，我也不知道为啥，neither ai knows~ -->
+</head>
+
+<body>
+    <div class="container"><form>
+		<label for="api">AI api：</label>
+        <label>
+            <input type="text" name="api"></input>
+        </label>
+        <input type="submit" name="submit"></input>
+		<p>请关注API报价情况，<br>大约每题解析使用1000tokens（输出），<br>出题大约2000tokens（输出）</p>
+        </form>
+    </div>
+
+
+</body>
+</html>
