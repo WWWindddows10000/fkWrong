@@ -1,3 +1,4 @@
+# 基础工具类（无需调整，已适配3.14）
 atomicwrites==1.4.1
 attrs==25.3.0
 certifi==2025.8.3
@@ -24,10 +25,7 @@ mdurl==0.1.2
 more-itertools==10.5.0
 networkx==3.1
 nibabel==5.2.1
-nipype==1.8.6
-numpy==1.24.4
 packaging==25.0
-pandas==2.0.3
 pathlib==1.0.1
 pluggy==1.5.0
 prov==2.0.1
@@ -37,20 +35,22 @@ pydot==4.0.1
 Pygments==2.19.2
 pyodbc==5.2.0
 pyparsing==3.1.4
-pytest==3.10.1
 python-dateutil==2.9.0.post0
 pytz==2025.2
-pyxnat==1.6.3
 pyzbar==0.1.9
-rdflib==7.1.4
+rdflib==6.3.2
 requests==2.32.4
 rich==14.1.0
-scipy==1.10.1
 setuptools==80.9.0
 simplejson==3.20.1
 six==1.17.0
-traits==7.0.2
 traits-stubs==6.4.0
 tzdata==2025.2
 urllib3==2.5.0
-
+numpy==2.3.4
+pandas==2.2.0
+traits==6.3.2
+nipype==1.8.6
+scipy==1.16.2
+pyxnat==1.6.3
+pytest==7.4.3

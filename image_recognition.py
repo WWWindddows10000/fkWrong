@@ -16,6 +16,9 @@ from PIL import Image
 from logging_methods import log, l
 from fid_interpretation import resolveCode
 
+class PdfHandler:
+
+
 def loadPDF(pdfPath):
     """
     从指定路径获取pdf文件,置入temp
