@@ -65,6 +65,7 @@ def copy_image(src_path, dst_dir):
     复制图片到目标目录，如果目录不存在则自动创建
     :param src_path: 源图片路径
     :param dst_dir: 目标文件夹路径
+
     :return: 目标图片路径
     """
     if not os.path.exists(dst_dir):

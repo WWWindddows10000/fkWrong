@@ -3,104 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <title>fkWrong!-主页</title>
-  <style>
-    li.error {
-      background-color: #5a5a5a;
-      border-color: #1fe291;
-      color: #e9f0f6;
-      font-weight: bold;
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-      text-align: center;
-    }
-    li {
-      cursor: pointer;
-      display: inline-block;
-      width: 10%;
-      margin-right: 0;
-      text-align: center;
-      padding-top: 2px;
-      padding-bottom: 2px;
-      background-color: #00ff73;
-      border: 1px #000000;
-      transition: background-color 0.4s;
-    }
-    #select_upload {
-      table-layout: fixed;
-      border: none;
-    }
-    #upload{
-      width: auto;
-      height: 100px;
-      border: 2px dashed #868686;
-      border-radius: 10px;
-      text-align: center;
-      line-height: 100px;
-      color: #000000;
-      background-color: aquamarine;
-      font-size: 16px;
-      margin: auto;
-    }
-    li:hover {
-      background-color: #f5f5f5;
-    }
-    .two_column {
-      border: none;
-    }
-    li.error:hover {
-      background-color: #4b4b4b;
-    }
-    body {
-      font-family: "宋体";
-      background-image: url("../static/picture/background.jpg"); 
-      background-size: cover; 
-    }
-    #main_table {
-      background-color: rgba(127,255,212,0.75);
-      height: auto;
-    }
-    #main_table th[scope="row"] {
-      min-width: 168px;
-      max-width: 168px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    th[scope="row"] {
-        height: 20px;
-        max-height: 20px;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-    .container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-  </style><!-- 如果使用外部css的话，不起作用，我也不知道为啥，neither ai knows~ -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
-
-
-
-
-
-
-
-
-
-
-
 
 <body>
 <div class="drag-container" onselectstart="return false;" id="scanWin" style="display:none; position:fixed; top:500px; left:500px; z-index:4444; cursor:move;background-color: #0066ffa4;">
-  <div style="text-align: center; font-size: 24px;height: 30px; color: #ffffff;background-color: #8f36f4;">
+  <div id="scan_window" style="text-align: center;font-size: 24px;height: 30px;color: #FFFFFF;background-color: #8f36f4;">
     <strong>文件扫描</strong>
-    <button align="right" id="closeScanWin" style="float: right; background-color: #f44336; color: white; border: none;height:30px;width:40px; cursor: pointer;">X</button>
+    <button id="closeScanWin" style="float: right;background-color: #f44336;color: white;border: none;height:30px;width:40px;cursor: pointer;">X</button>
   </div>
   <iframe
     id="scanWindow"
@@ -110,64 +21,14 @@
     src="/scanWindow"
     style="pointer-events:auto; user-select:none;">
   </iframe>
-</div><div class="drag-container" onselectstart="return false;" id="prtWin" style="display:none; position:fixed; top:500px; left:500px; z-index:9999; cursor:move;background-color: #0066ffa4;">
-  <div width="200" style="text-align: center; font-size: 24px;height: 30px; color: #ffffff;background-color: #8f36f4;">
-    <strong>浮动窗口2</strong>
-    <button align="right" id="closePrtWin" style="float: right; background-color: #f44336; color: white; border: none;height:30px;width:40px; cursor: pointer;">X</button>
-  </div>
-  浮动窗口2内容
 </div>
-<script>
-  // 获取两个可拖动窗口
-  const scanWin = document.getElementById('scanWin');
-  const prtWin = document.getElementById('prtWin');
-
-  // 当前拖动状态
-  let isDragging = false;
-  let dragTarget = null;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  // 公共mousedown绑定
-  function setupDragEvents(elem) {
-    elem.addEventListener('mousedown', function(e) {
-      // 只允许拖动顶部标题区域
-      if (e.target.tagName.toLowerCase() === 'button') return; // 忽略点击关闭按钮
-      isDragging = true;
-      dragTarget = elem;
-      offsetX = e.clientX - elem.offsetLeft;
-      offsetY = e.clientY - elem.offsetTop;
-      elem.style.cursor = 'grabbing';
-    });
-  }
-
-  // 应用到两个元素
-  setupDragEvents(scanWin);
-  setupDragEvents(prtWin);
-
-  // 鼠标移动时拖动窗口
-  document.addEventListener('mousemove', function(e) {
-    if (isDragging && dragTarget) {
-      dragTarget.style.left = (e.clientX - offsetX) + 'px';
-      dragTarget.style.top = (e.clientY - offsetY) + 'px';
-    }
-  });
-
-  // 鼠标释放时取消拖动
-  document.addEventListener('mouseup', function() {
-    if (isDragging && dragTarget) {
-      dragTarget.style.cursor = 'move';
-    }
-    isDragging = false;
-    dragTarget = null;
-  });
-</script>
 
 <div class="container">
   <table id="main_table" width="1096" border="3">
-
     <tr>
-      <th height="138" colspan="2" scope="col"><img src="../static/picture/fkWrong.png" style="width:100%;height:158px;" /></th>
+      <th height="138" colspan="2" scope="col">
+        <img src="{{ url_for('static', filename='picture/fkWrong.png') }}" style="width:100%;height:158px;" />
+      </th>
     </tr>
     <tr>
       <th width="168" scope="row">===快速开始===</th>
@@ -177,6 +38,7 @@
       <th scope="row">错题本&gt;</th>
       <td width="1024" align="center" id="main_ui" rowspan="6">
         {{ main_ui | safe }}
+      </td>
     </tr>
     <tr>
       <th scope="row">寻找作业&gt;</th>
@@ -186,71 +48,16 @@
     </tr>
     <tr>
       <th scope="row" id="scanButton">文件扫描&gt;</th>
+    </tr>
     <tr>
       <th scope="row" id="settingsButton">设置&gt;</th>
+    </tr>
     <tr>
       <th style="height: 277px !important;" scope="row">&nbsp;</th>
     </tr>
   </table>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-  window.onload = function(){
-    window.addEventListener('message',function(e){
-        console.log(e.data)
-    })
-}
-document.getElementById('scanButton').onclick = function() {
-  document.getElementById('scanWin').style.display = 'block';
-};
-document.getElementById('closeScanWin').onclick = function() {
-  document.getElementById('scanWin').style.display = 'none';
-};
-document.getElementById('settingsButton').onclick = function() {
-  document.getElementById('main_ui').innerHTML = `<iframe
-    id="settingsWindow"
-    title="设置"
-    width="804"
-    height="500"
-    src="/setting">
-  </iframe>`;
-  document.getElementById('toolBar').innerHTML = `
-  <ui>
-  <li id="node" onClick="node()">节点设置</li>
-  <li id="api" onClick="api()">AI API设置</li></ui>
-  `;
-};
-	function api(){
-		document.getElementById('main_ui').innerHTML = `<iframe
-    id="settingsWindow"
-    title="设置"
-    width="804"
-    height="500"
-    src="/api_setting">
-  </iframe>`;
-	}
-	function node(){
-		document.getElementById('main_ui').innerHTML = `<iframe
-    id="settingsWindow"
-    title="设置"
-    width="804"
-    height="500"
-    src="/setting">
-  </iframe>`;
-	}
-</script>
-
+<script src="{{ url_for('static', filename='js/drag_window.js') }}"></script>
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>
