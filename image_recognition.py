@@ -16,6 +16,9 @@ from PIL import Image
 from logging_methods import log, l
 from fid_interpretation import resolveCode
 
+class PdfHandler:
+
+
 def loadPDF(pdfPath):
     """
     从指定路径获取pdf文件,置入temp
@@ -62,6 +65,7 @@ def copy_image(src_path, dst_dir):
     复制图片到目标目录，如果目录不存在则自动创建
     :param src_path: 源图片路径
     :param dst_dir: 目标文件夹路径
+
     :return: 目标图片路径
     """
     if not os.path.exists(dst_dir):

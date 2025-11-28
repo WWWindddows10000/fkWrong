@@ -4,3 +4,7 @@ fksc添加了可选的subject字段，记得加到前端上
 
 2025/8/30
 写完了database_operation，非常好用，太强了
+
+2025/10/16
+我要气死了，调试了很多诡异的package,traits还需要VC++2014运行库,记得装
+packages要找哪天好好优化优化，把不用的都删掉！

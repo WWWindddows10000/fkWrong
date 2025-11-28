@@ -1,0 +1,29 @@
+.two_column {
+  border: none;
+}
+body {
+  font-family: "宋体";
+}
+#main_table {
+  background-color: rgba(127,255,212,0.75);
+  height: auto;
+}
+#main_table th[scope="row"] {
+  min-width: 168px;
+  max-width: 168px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+th[scope="row"] {
+  height: 20px;
+  max-height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
