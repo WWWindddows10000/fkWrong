@@ -1,17 +1,21 @@
 body{
-
+    display: flex;
+    justify-content: center;
 }
 canvas {
-  border: 1px solid #000;
-  cursor: crosshair;
-  display: block;
-  margin: 0 auto;
-  overflow: scroll;
+    border: 1px solid #000;
+    cursor: crosshair;
+    display: block;
+    overflow: scroll;
+    margin: 20px;
 }
 .controls {
-  margin: 20px;
+    margin: 20px;
 }
 .input-box {
-  position: absolute;
-  display: none;
+    position: absolute;
+    display: none;
+}
+div{
+    background: #000;
 }

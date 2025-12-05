@@ -12,6 +12,7 @@ fkWrong! Logging Methods version 0.1.0
 from datetime import datetime as dt
 import enum
 import logging
+import os
 from rich.logging import RichHandler
 
 logger = logging.getLogger("all_in_logger")
@@ -30,6 +31,11 @@ logging.getLogger("imapclient").setLevel(logging.WARNING)
 logging.getLogger("imaplib").setLevel(logging.WARNING)
 
 class l(enum.Enum):
+    """
+    I am lazy, I don't want to use 4- or 5-character-long log level.
+    So I made this, replacing words into l.(The first letter)
+    But this is totally nonsense。 An unnecessary move.
+    """
     I = 'INFO'
     W = 'WARN'
     E = 'ERROR'

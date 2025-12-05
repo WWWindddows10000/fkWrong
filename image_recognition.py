@@ -14,7 +14,7 @@ import shutil
 from pyzbar.pyzbar import decode
 from PIL import Image
 from logging_methods import log, l
-from fid_interpretation import resolveCode
+from fid_interpretation import resolve_code
 
 class PdfHandler:
 
@@ -71,9 +71,12 @@ def copy_image(src_path, dst_dir):
     if not os.path.exists(dst_dir):
         os.makedirs(dst_dir)
     dst_path = os.path.join(dst_dir, os.path.basename(src_path))
-    shutil.copy(src_path, dst_path)
+    try:
+        shutil.copy(src_path, dst_path)
+    except TypeError:
+        log('')
     return dst_path
 
-def sort(FID, pic):
-    path = resolveCode(FID)
+def sort(fid, pic):
+    path = resolve_code(fid)
     
