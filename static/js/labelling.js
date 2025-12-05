@@ -11,7 +11,7 @@ let boxes = [];
 let nowBoxNo = 0;
 
 const img = new Image();
-img.src = '../static/picture/niaoglishpaper.png';
+img.src = '../static/picture/test_label.jpg';
 img.onload = function() {
     ctx.drawImage(img, 10, 10);
 }
