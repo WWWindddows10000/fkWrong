@@ -9,7 +9,15 @@
 </head>
 <body>
 <canvas id="canvas" width="500" height="800"></canvas>
-<div id="settings">test</div>
+<div id="settings">
+    <p>合并错题框</p>
+    <label for="first">第一个框体编号</label>
+    <textarea placeholder="不需要输入#，例如：#1 -> 1" id="first"></textarea>
+    <label for="second">第一个框体编号</label>
+    <textarea placeholder="不需要输入#，例如：#1 -> 1" id="second"></textarea>
+    <button onClick="">合并 / Merge</button>
+    <p>请注意，合并之后，</p>
+</div>
 <!--<script src="{{ url_for('static', filename='js/labelling.js') }}"></script>-->
 <script src="../static/js/labelling.js"></script>
 </body>
