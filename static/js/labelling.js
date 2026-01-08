@@ -91,8 +91,8 @@ canvas.addEventListener('mouseup', function (e) {
         const submitButton = document.createElement('button');
         submitButton.onclick = () => submitText(currentBoxNo);
         submitButton.style.position = 'absolute';
-        submitButton.text = "OK"; //not ok.
-        submitButton.style.width="20px";
+        submitButton.textContent = "OK";
+        submitButton.style.width="40px";
         submitButton.style.left =
           `${rect.left + (startX + imgOffsetX) * scaleX + 70}px`;
         submitButton.style.top  =
