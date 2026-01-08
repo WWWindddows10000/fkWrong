@@ -65,12 +65,40 @@ canvas.addEventListener('mousemove', function (e) {
     }
 });
 
-
+// Create a new box
 canvas.addEventListener('mouseup', function (e) {
     if (isDrawing) {
         const endX = e.offsetX;
         const endY = e.offsetY;
         const text = '无描述';
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = rect.width  / canvas.width;
+        const scaleY = rect.height / canvas.height;
+        const imgOffsetX = 10;
+        const imgOffsetY = 10;
+
+        const inputElement = document.createElement('input');
+        inputElement.id = `inputBox${currentBoxNo}`;
+        inputElement.type = 'text';
+        inputElement.placeholder = '输入描述';
+        inputElement.style.position = 'absolute';
+        inputElement.style.left =
+          `${rect.left + (startX + imgOffsetX) * scaleX}px`;
+          console.log(`${rect.left + (startX + imgOffsetX) * scaleX}px`);
+        inputElement.style.top  =
+          `${rect.top  + (startY + imgOffsetY) * scaleY}px`;
+        inputElement.style.width = '70px';
+        const submitButton = document.createElement('button');
+        submitButton.onclick = () => submitText(currentBoxNo);
+        submitButton.style.position = 'absolute';
+        submitButton.text = "OK"; //not ok.
+        submitButton.style.width="20px";
+        submitButton.style.left =
+          `${rect.left + (startX + imgOffsetX) * scaleX + 70}px`;
+        submitButton.style.top  =
+          `${rect.top  + (startY + imgOffsetY) * scaleY}px`;
+        document.body.appendChild(inputElement);
+        document.body.appendChild(submitButton);
         boxes.push({
             boxNo: currentBoxNo++,
             startX: startX,
@@ -78,7 +106,11 @@ canvas.addEventListener('mouseup', function (e) {
             endX: endX,
             endY: endY,
             text: text,
+            inputElement: inputElement,
+            submitButton: submitButton
         });
+
+
 
         nowBoxNo++;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -94,15 +126,16 @@ function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// function submitText(currentBoxNo) {
-//         let box = boxes[currentBoxNo]
-//     const text = box.inputElement.value.trim();
-//     if (text) {
-//         box.text = text;
-//     }
-//     box.inputElement.style.display = 'none';
-//     redrawAll();
-// }
+ function submitText(currentBoxNo) {
+     let box = boxes[currentBoxNo]
+     const text = box.inputElement.value.trim();
+     if (text) {
+         box.text = text;
+     }
+     box.inputElement.style.display = 'none';
+     console.log('SS');
+     redrawAll();
+ }
 
 
 function submitData() {
