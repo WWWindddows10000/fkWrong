@@ -198,8 +198,13 @@ def resolve_as_tree():
 
 def self_test():
     log("fkWrong! configuration parsing module has been successfully introduced.", l.I)
-    log("Next, test resolve_code. The result of executing this function should be [数学-暑假作业（升十年级）-第03练（第1页）]", l.D)
-    resolve_code("mat10ssj031",1)
-    resolve_code("mat10ssj031", 1)
+    log("Next, test resolve_code. The result of executing this function should be [数学-暑假作业（升十年级）-第03练]", l.D)
+    rc_result = resolve_code("mat10ssj031",1,1)
+    if rc_result != "数学-暑假作业（升十年级）-第03练":
+        log("Function resolve_code returned an unexpected result {} for a check argument, meaning the program \
+                      cannot continue to run due to potential directory tree errors. It will quit soon.\n \
+                      Log file saved.".format(rc_result), l.F)
+        time.sleep(1)
+        quit(1)
 
 self_test()

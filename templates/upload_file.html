@@ -77,17 +77,16 @@
 
         <table id="select_upload" width="700" height="200" border="3" align="center">
           <tr>
-            <th class="two_column" scope="col"><form action="" method="POST">
+            <th class="two_column" scope="col">
               <div>
                 你可以……
                 <p></p>
-                <input style="width: 100%" name="submit" type="submit" value="扫描文件">
+                  <button style="width: 100%" onClick="scan()">扫描文件</button>
                 <p></p>
                 或者
                 <p></p>
                 <div id="upload">拖动文件到这里上传</div>
-              </div>
-            </form></th>
+              </div></th>
             <th class="two_column" scope="col">
               <div align="center">
         也可以从以下最近7条邮件中选择……
@@ -112,68 +111,5 @@
         </table>
 
 </div>
-<script>
-  const dropZone = document.getElementById('upload'); // 定义在顶部，所有函数可访问
-
-  function handleEmail(index) {
-    // 在这里向flask后端以DELETE方式返回email编号
-    fetch('/', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ emailIndex: index })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.redirect) {
-        window.location.href = data.redirect;
-      }
-      dropZone.style.backgroundColor = 'aquamarine'; // 上传成功后恢复背景色
-    })
-    .catch(error => {
-      console.error('上传失败:', error);
-      alert('邮件失败: ' + error);
-    });
-  }
-
-  dropZone.addEventListener('dragover', event => {
-    event.stopPropagation();
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
-    dropZone.style.backgroundColor = '#ef49ad'; // 改变背景色以示拖动
-  });
-
-  dropZone.addEventListener('dragleave', event => {
-    dropZone.style.backgroundColor = 'aquamarine'; // 改变背景色以示拖动
-  });
-
-  dropZone.addEventListener('drop', event => {
-    // Get the files
-    const files = event.dataTransfer.files;
-    //在这里向flask后端以put方式上传文件
-    if (files.length > 0) {
-      const formData = new FormData();
-      formData.append('file', files[0]);
-      fetch('/', {
-        method: 'PUT',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.redirect) {
-          window.location.href = data.redirect;
-        }
-        dropZone.style.backgroundColor = 'aquamarine'; // 上传成功后恢复背景色
-      })
-      .catch(error => {
-        console.error('上传失败:', error);
-        alert('文件上传失败: ' + error);
-        dropZone.style.backgroundColor = 'aquamarine';
-      });
-    }
-    event.stopPropagation();
-    event.preventDefault();
-  });
-
-</script>
+<script src="../static/js/upload.js"></script>
+</body>

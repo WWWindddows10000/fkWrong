@@ -17,5 +17,6 @@ canvas {
     display: none;
 }
 div{
-    background: #000;
+    background: #F1C64E;
+    width: 500px;
 }

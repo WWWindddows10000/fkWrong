@@ -31,6 +31,7 @@
     }
     .func {
         width: 100px;
+        height: 40px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -97,7 +98,8 @@
     font-weight: bold;
   }
 
-  </style><!-- 如果使用外部css的话，不起作用，我也不知道为啥，neither ai knows~ -->
+  </style> <!-- 待转移至外部 -->
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
 </head>
 
 <body>
@@ -268,7 +270,6 @@
                 }
       }
 
-      // 事件委托：点击 .node 元素时触发
       document.addEventListener("click", function(e) {
         if (e.target.classList.contains("node")) {
           const nodeId = e.target.dataset.id;
